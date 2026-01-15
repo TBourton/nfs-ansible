@@ -1,0 +1,83 @@
+---
+- name: Configure Debian NFS media server
+  hosts: nfs_servers
+  become: true
+
+  pre_tasks:
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - lsb-release
+          - util-linux-extra
+          - vim
+          - nfs-common
+          - open-iscsi
+          - curl
+          - iotop
+          - curl
+          - cryptsetup
+          - ntfs-3g
+          - rsync
+        state: present
+        update_cache: true
+
+    - name: Download Tailscale installation script
+      ansible.builtin.get_url:
+        url: https://tailscale.com/install.sh
+        dest: /tmp/install_tailscale.sh
+        mode: '0755'
+
+    - name: Run Tailscale installation script
+      ansible.builtin.command: /tmp/install_tailscale.sh
+      args:
+        creates: /usr/sbin/tailscaled
+      register: tailscale_install_result
+      changed_when: false
+
+    - name: Enable and start tailscaled
+      ansible.builtin.systemd:
+        name: tailscaled
+        enabled: true
+        state: started
+
+    - name: Create nfs root
+      ansible.builtin.file:
+        path: "{{ nfs_root }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create disk mount points
+      ansible.builtin.file:
+        path: "{{ mnt_root }}/{{ item.name }}"
+        state: directory
+        mode: "0755"
+      loop: "{{ disks }}"
+
+    - name: Mount disks by UUID
+      ansible.posix.mount:
+        path: "{{ mnt_root }}/{{ item.name }}"
+        src: "UUID={{ item.uuid }}"
+        fstype: ext4
+        opts: defaults,nofail,x-systemd.automount"
+        state: mounted
+      loop: "{{ disks }}"
+
+    - name: Create logical media directories
+      ansible.builtin.file:
+        path: "{{ nfs_root }}/{{ item.dst }}"
+        state: directory
+        mode: "0755"
+      loop: "{{ logical_dirs }}"
+
+    - name: Symlink media directories to disks
+      ansible.builtin.file:
+        src: "{{ mnt_root }}/{{ item.src }}"
+        dest: "{{ nfs_root }}/{{ item.dst }}"
+        state: link
+        force: true
+      loop: "{{ logical_dirs }}"
+
+  roles:
+    - geerlingguy.nfs

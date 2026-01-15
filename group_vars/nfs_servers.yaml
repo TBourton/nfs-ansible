@@ -1,0 +1,6 @@
+---
+nfs_exports:
+  - "/nfs 192.168.1.0/24(ro,async,no_subtree_check,fsid=0)"
+
+nfs_root: /nfs
+mnt_root: /mnt

@@ -1,0 +1,6 @@
+.env/
+*.log
+kubeconfig
+.ansible/
+*.img
+.vscode/

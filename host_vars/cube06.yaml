@@ -1,0 +1,15 @@
+---
+disks:
+  - name: usb1 # /dev/sdc
+    uuid: "3aa268b0-c8f7-4d68-8a63-a04fc58b4116"
+  - name: hdd # /dev/sda2
+    uuid: "7ccf0e05-f26f-43de-97a2-43a36445099c"
+
+logical_dirs:
+  # src, relative to mnt_root, dst relative to /nfs_root
+  - src: hdd/backups
+    dst: backups
+  - src: usb1/tv
+    dst: media/tv
+  - src: usb1/movies
+    dst: media/movies

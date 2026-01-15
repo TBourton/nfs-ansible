@@ -1,0 +1,5 @@
+---
+ansible_user: root
+systemd_dir: /etc/systemd/system
+system_timezone: Europe/London
+custom_reboot_command: /usr/sbin/shutdown -r now
