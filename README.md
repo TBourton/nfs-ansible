@@ -51,7 +51,9 @@ WIP
 
 ## Usage
 
-Transfering from external storage to NFS dirs
+### RSync on Server
+
+Transfering from added external storage to NFS dirs on the server
 
 Mount external drive, e.g.
 
@@ -65,8 +67,21 @@ Rsync a dir to one of the NFS drives, e.g.
 rsync -av --progress --partial --inplace /mnt/ssd/Video/Movies/ /mnt/usb1/movies/
 ```
 
-If needed to run in the background, use nohup
+If needed to run in the background, use tmux
 
 ```console
-nohup rsync -av --progress --partial --inplace /mnt/ssd/Video/Movies/ /mnt/usb1/movies/ > rsync.log 2>&1 &
+tmux new -s rsync
+```
+
+```console
+rsync -av --progress --partial --inplace /mnt/ssd/Video/Movies/ /mnt/usb1/movies/
+```
+
+Then, detach with `CTRL + B`, then `d`. Reattach with `tmux attach -t rsync`.
+
+### Mount NFS
+
+```console
+showmount -e 192.168.1.191
+sudo mount -t nfs -o vers=4 192.168.1.191:/nfs /mnt/nfs/
 ```

@@ -9,7 +9,19 @@ logical_dirs:
   # src, relative to mnt_root, dst relative to /nfs_root
   - src: hdd/backups
     dst: backups
+  - src: hdd/jellyfin_metadata
+    dst: jellyfin_metadata
   - src: usb1/tv
     dst: media/tv
   - src: usb1/movies
     dst: media/movies
+  - src: usb1/anime
+    dst: media/anime
+  - src: usb1/podcasts
+    dst: media/podcasts
+  - src: usb1/pictures
+    dst: media/pictures
+  - src: usb1/music
+    dst: media/music
+  - src: usb1/home_videos_and_photos
+    dst: media/home_videos_and_photos

@@ -18,6 +18,7 @@
           - cryptsetup
           - ntfs-3g
           - rsync
+          - tmux
         state: present
         update_cache: true
 
@@ -68,15 +69,18 @@
       ansible.builtin.file:
         path: "{{ nfs_root }}/{{ item.dst }}"
         state: directory
-        mode: "0755"
+        mode: "{{ item.mode | default('0777') }}"
+        owner: "{{ item.owner | default('root') }}"
+        group: "{{ item.group | default('root') }}"
       loop: "{{ logical_dirs }}"
 
-    - name: Symlink media directories to disks
-      ansible.builtin.file:
+    - name: Link media directories to disks
+      ansible.posix.mount:
         src: "{{ mnt_root }}/{{ item.src }}"
-        dest: "{{ nfs_root }}/{{ item.dst }}"
-        state: link
-        force: true
+        path: "{{ nfs_root }}/{{ item.dst }}"
+        opts: bind
+        fstype: none
+        state: mounted
       loop: "{{ logical_dirs }}"
 
   roles:
