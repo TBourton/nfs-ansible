@@ -1,10 +1,9 @@
 ---
 nfs_exports:
-  - "/nfs 192.168.1.0/24(ro,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=0)"
-  - "/nfs/backups 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=1)"
-  - "/nfs/jellyfin_metadata 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=6)"
-  - "/nfs/backups/longhorn 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=5)"
-  - "/nfs/media 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=2)"
-
+  - "/nfs 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=0)"
+  - "/nfs/media 192.168.1.0/24(rw,async,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=1)"
+  - "/nfs/backups 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=100)"
+  - "/nfs/backups/longhorn 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=101)"
+  - "/nfs/jellyfin_metadata 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=300)"
 nfs_root: /nfs
 mnt_root: /mnt

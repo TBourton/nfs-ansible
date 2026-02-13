@@ -19,6 +19,7 @@
           - ntfs-3g
           - rsync
           - tmux
+          - mergerfs
         state: present
         update_cache: true
 
@@ -65,23 +66,32 @@
         state: mounted
       loop: "{{ disks }}"
 
-    - name: Create logical media directories
+    - name: Create directories debug
+      ansible.builtin.debug:
+        msg: "{{ mnt_root }}/{{ item.0.name }}/{{ item.1 }}"
+      loop: "{{ disks | subelements('create_dirs') }}"
+
+    - name: Create directories
       ansible.builtin.file:
-        path: "{{ nfs_root }}/{{ item.dst }}"
+        path: "{{ mnt_root }}/{{ item.0.name }}/{{ item.1 }}"
         state: directory
-        mode: "{{ item.mode | default('0777') }}"
+        mode: "{{ item.mode | default('0775') }}"
         owner: "{{ item.owner | default('root') }}"
         group: "{{ item.group | default('root') }}"
-      loop: "{{ logical_dirs }}"
+      loop: "{{ disks | subelements('create_dirs') }}"
 
-    - name: Link media directories to disks
+    - name: Show mergerfs source string
+      ansible.builtin.debug:
+        msg: "{{ disks | map(attribute='name') | map('regex_replace', '^', mnt_root ~ '/') | join(':') }}"
+
+    - name: Mount mergerfs media pool
       ansible.posix.mount:
-        src: "{{ mnt_root }}/{{ item.src }}"
-        path: "{{ nfs_root }}/{{ item.dst }}"
-        opts: bind
-        fstype: none
+        path: "{{ nfs_root }}"
+        src: "{{ disks | map(attribute='name') | map('regex_replace', '^', mnt_root ~ '/') | join(':') }}"
+        fstype: fuse.mergerfs
+        # https://trapexit.github.io/mergerfs/latest/config/functions_categories_policies/#path-preservation
+        opts: "defaults,minfreespace=10G,cache.files=off,category.create=eppfrd,func.getattr=newest,dropcacheonclose=false"  # yamllint disable-line rule:line-length
         state: mounted
-      loop: "{{ logical_dirs }}"
 
   roles:
     - geerlingguy.nfs

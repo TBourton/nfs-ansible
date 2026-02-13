@@ -2,26 +2,20 @@
 disks:
   - name: usb1 # /dev/sdc
     uuid: "3aa268b0-c8f7-4d68-8a63-a04fc58b4116"
+    # Disks can be non-uniform, so ensure for given disk that subdirs exist in
+    # order to put certian dirs on certian disks
+    # create_dirs will ve relative to /mnt point
+    create_dirs:
+      - media/tv
+      - media/movies
+      - media/anime
+      - media/podcasts
+      - media/pictures
+      - media/music
+      - media/home_videos_and_photos
+
   - name: hdd # /dev/sda2
     uuid: "7ccf0e05-f26f-43de-97a2-43a36445099c"
-
-logical_dirs:
-  # src, relative to mnt_root, dst relative to /nfs_root
-  - src: hdd/backups
-    dst: backups
-  - src: hdd/jellyfin_metadata
-    dst: jellyfin_metadata
-  - src: usb1/tv
-    dst: media/tv
-  - src: usb1/movies
-    dst: media/movies
-  - src: usb1/anime
-    dst: media/anime
-  - src: usb1/podcasts
-    dst: media/podcasts
-  - src: usb1/pictures
-    dst: media/pictures
-  - src: usb1/music
-    dst: media/music
-  - src: usb1/home_videos_and_photos
-    dst: media/home_videos_and_photos
+    create_dirs:
+      - backups
+      - jellyfin_metadata
