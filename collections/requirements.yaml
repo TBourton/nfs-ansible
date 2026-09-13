@@ -3,3 +3,4 @@ collections:
   - name: ansible.posix
 roles:
   - name: geerlingguy.nfs
+  - name: geerlingguy.samba

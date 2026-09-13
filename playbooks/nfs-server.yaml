@@ -20,6 +20,7 @@
           - rsync
           - tmux
           - mergerfs
+          - samba
         state: present
         update_cache: true
 
@@ -90,8 +91,37 @@
         src: "{{ disks | map(attribute='name') | map('regex_replace', '^', mnt_root ~ '/') | join(':') }}"
         fstype: fuse.mergerfs
         # https://trapexit.github.io/mergerfs/latest/config/functions_categories_policies/#path-preservation
-        opts: "defaults,minfreespace=10G,cache.files=off,category.create=eppfrd,func.getattr=newest,dropcacheonclose=false"  # yamllint disable-line rule:line-length
+        opts: "defaults,minfreespace=10G,cache.files=partial,category.create=eppfrd,func.getattr=newest,dropcacheonclose=true"  # yamllint disable-line rule:line-length
         state: mounted
+
+    - name: Create samba user
+      ansible.builtin.user:
+        name: "{{ samba_user }}"
+        shell: /usr/sbin/nologin
+        create_home: false
+
+    - name: Set samba password
+      ansible.builtin.shell: |
+        (echo "{{ samba_password }}"; echo "{{ samba_password }}") \
+        | smbpasswd -s -a {{ samba_user }}
+      args:
+        executable: /bin/bash
+
+    - name: Configure samba
+      ansible.builtin.template:
+        src: smb.conf.j2
+        dest: /etc/samba/smb.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart samba
 
   roles:
     - geerlingguy.nfs
+    - geerlingguy.samba
+
+  handlers:
+    - name: Restart samba
+      ansible.builtin.systemd:
+        name: smbd
+        state: restarted

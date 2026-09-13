@@ -1,0 +1,21 @@
+---
+disks:
+  - name: usb1 # /dev/sdb
+    uuid: "3aa268b0-c8f7-4d68-8a63-a04fc58b4116"
+    # Disks can be non-uniform, so ensure for given disk that subdirs exist in
+    # order to put certian dirs on certian disks
+    # create_dirs will ve relative to /mnt point
+    create_dirs:
+      - media/tv
+      - media/movies
+      - media/anime
+      - media/podcasts
+      - media/pictures
+      - media/music
+      - media/home_videos_and_photos
+
+  - name: usb2 # /dev/sdc
+    uuid: "05be0e81-97f6-4fe2-b889-0f14e671d6c7"
+    create_dirs:
+      - backups
+      - jellyfin_metadata

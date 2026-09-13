@@ -1,0 +1,26 @@
+[global]
+   workgroup = WORKGROUP
+   server role = standalone server
+   security = user
+
+   map to guest = never
+   server min protocol = SMB2
+
+   log file = /var/log/samba/log.%m
+   max log size = 1000
+
+
+[{{ samba_share_name }}]
+   path = {{ samba_share_path }}
+
+   browseable = yes
+   writable = yes
+
+   guest ok = yes
+   valid users = {{ samba_user }}
+
+   create mask = 0664
+   directory mask = 0775
+
+   force user = {{ samba_user }}
+   force group = {{ samba_user }}

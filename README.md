@@ -82,7 +82,7 @@ Then, detach with `CTRL + B`, then `d`. Reattach with `tmux attach -t rsync`.
 ### Mount NFS
 
 ```console
-showmount -e 192.168.1.191
-sudo mount -t nfs 192.168.1.191:/nfs /mnt/nfs/
-# sudo mount -t nfs -o vers=4 192.168.1.191:/ /mnt/nfs/
+showmount -e 192.168.0.252
+sudo mount -t nfs 192.168.0.252:/nfs /mnt/nfs/
+# sudo mount -t nfs -o vers=4 192.168.0.252:/ /mnt/nfs/
 ```

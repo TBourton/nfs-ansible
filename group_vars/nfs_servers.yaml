@@ -1,9 +1,13 @@
 ---
 nfs_exports:
-  - "/nfs 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=0)"
-  - "/nfs/media 192.168.1.0/24(rw,async,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=1)"
-  - "/nfs/backups 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=100)"
-  - "/nfs/backups/longhorn 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=101)"
-  - "/nfs/jellyfin_metadata 192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=300)"
+  - "/nfs 192.168.0.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=0)"
+  - "/nfs/media 192.168.0.0/24(rw,async,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=1)"
+  - "/nfs/backups 192.168.0.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=100)"
+  - "/nfs/backups/longhorn 192.168.0.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=101)"
+  - "/nfs/jellyfin_metadata 192.168.0.0/24(rw,sync,no_subtree_check,no_root_squash,crossmnt,nohide,fsid=300)"
 nfs_root: /nfs
 mnt_root: /mnt
+samba_user: sambauser
+samba_password: sambapassword
+samba_share_name: media
+samba_share_path: "{{ nfs_root }}"
